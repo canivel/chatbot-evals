@@ -7,16 +7,15 @@ Supports Python, TypeScript, Dockerfile, and YAML generation.
 from __future__ import annotations
 
 import ast
-import os
 import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
 import structlog
-from openai import AsyncOpenAI
 
 from agents.engineering.prompts import CODE_GENERATION_PROMPT, CODE_REVIEW_PROMPT
+from evalplatform.llm import create_llm_client
 
 logger = structlog.get_logger()
 
@@ -75,10 +74,7 @@ class CodeGenerator:
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
-        self._client = AsyncOpenAI(
-            api_key=os.environ.get("OPENAI_API_KEY", ""),
-            base_url=os.environ.get("OPENAI_BASE_URL"),
-        )
+        self._client = create_llm_client()
 
     async def _call_llm(
         self,
@@ -88,13 +84,13 @@ class CodeGenerator:
     ) -> str:
         """Make a raw LLM call and return the response content."""
         try:
-            response = await self._client.chat.completions.create(
+            response = await self._client.chat(
                 model=self.model,
                 messages=messages,
                 temperature=temperature or self.temperature,
                 max_tokens=max_tokens or self.max_tokens,
             )
-            return response.choices[0].message.content
+            return response.content
         except Exception:
             logger.exception("code_generator_llm_call_failed", model=self.model)
             raise

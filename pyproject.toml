@@ -10,7 +10,11 @@ dependencies = [
     # Agent framework
     "langgraph>=0.4.0",
     "langchain-core>=0.3.0",
+
+    # LLM providers (no litellm - compromised)
     "openai>=1.60.0",
+    "anthropic>=0.40.0",
+    "google-genai>=1.0.0",
 
     # Eval libraries
     "deepeval>=2.0.0",

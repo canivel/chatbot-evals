@@ -3,11 +3,9 @@
 from __future__ import annotations
 
 import json
-import os
 import asyncio
 from typing import Any
 
-from openai import AsyncOpenAI
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -18,6 +16,7 @@ from tenacity import (
 import structlog
 
 from evalplatform.eval_engine.judges.base_judge import BaseJudge, JudgeVerdict
+from evalplatform.llm import create_llm_client
 
 logger = structlog.get_logger(__name__)
 
@@ -56,10 +55,7 @@ class LLMJudge(BaseJudge):
         self.max_tokens = max_tokens
         self.max_retries = max_retries
         self.timeout = timeout
-        self._client = AsyncOpenAI(
-            api_key=os.environ.get("OPENAI_API_KEY", ""),
-            base_url=os.environ.get("OPENAI_BASE_URL"),
-        )
+        self._client = create_llm_client()
 
     # -- Core judge method ---------------------------------------------------
 
@@ -132,7 +128,7 @@ class LLMJudge(BaseJudge):
             prompt_length=len(user_message),
         )
 
-        response = await self._client.chat.completions.create(
+        response = await self._client.chat(
             model=self.model,
             messages=[
                 {"role": "system", "content": system_message},
@@ -143,7 +139,7 @@ class LLMJudge(BaseJudge):
             timeout=self.timeout,
         )
 
-        content: str = response.choices[0].message.content or ""
+        content: str = response.content or ""
 
         if not content.strip():
             raise ValueError("LLM returned an empty response")

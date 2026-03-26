@@ -12,8 +12,9 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 import structlog
-from openai import AsyncOpenAI
 from pydantic import BaseModel, Field
+
+from evalplatform.llm import create_llm_client, MultiProviderClient
 
 from agents.message_bus import Message, MessageBus, MessageType
 from agents.state import ProjectState
@@ -66,11 +67,8 @@ class BaseAgent(ABC):
         self._running = False
         self._turn_count = 0
 
-        # Initialize OpenAI client
-        self._llm_client = AsyncOpenAI(
-            api_key=os.environ.get("OPENAI_API_KEY", ""),
-            base_url=os.environ.get("OPENAI_BASE_URL"),
-        )
+        # Initialize multi-provider LLM client (OpenAI, Claude, Gemini)
+        self._llm_client = create_llm_client()
 
         # Register with message bus
         self.bus.register_agent(self.config.agent_id, self.config.team)
@@ -148,10 +146,16 @@ Current project state:
             kwargs["response_format"] = {"type": "json_object"}
 
         try:
-            response = await self._llm_client.chat.completions.create(**kwargs)
-            content = response.choices[0].message.content
+            response = await self._llm_client.chat(
+                model=kwargs.pop("model"),
+                messages=kwargs.pop("messages"),
+                temperature=kwargs.pop("temperature"),
+                max_tokens=kwargs.pop("max_tokens"),
+                json_mode=kwargs.pop("response_format", None) is not None,
+            )
+            content = response.content
             self.context.conversation_history.append({"role": "assistant", "content": content})
-            self.state.log_activity(self.agent_id, "llm_call", {"model": self.config.model})
+            self.state.log_activity(self.agent_id, "llm_call", {"model": self.config.model, "provider": response.provider})
             return content
         except Exception as e:
             logger.error("llm_call_failed", agent_id=self.agent_id, error=str(e))
