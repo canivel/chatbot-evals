@@ -52,7 +52,7 @@ Edit `.env` with your settings:
 # LLM Configuration (required -- at least one provider)
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
-LITELLM_MODEL=gpt-4o-mini
+GOOGLE_API_KEY=AIza...
 
 # Database (required for full platform, not needed for demo/agents)
 DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/chatbot_evals
@@ -177,13 +177,13 @@ The API automatically connects to the database and Redis. The `.env` file is loa
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `OPENAI_API_KEY` | -- | OpenAI API key |
-| `ANTHROPIC_API_KEY` | -- | Anthropic API key |
-| `LITELLM_MODEL` | `gpt-4o-mini` | Default model for general LLM calls |
+| `OPENAI_API_KEY` | -- | OpenAI API key (for gpt-* models) |
+| `ANTHROPIC_API_KEY` | -- | Anthropic API key (for claude-* models) |
+| `GOOGLE_API_KEY` | -- | Google API key (for gemini-* models) |
 | `EVAL_JUDGE_MODEL` | `gpt-4o` | Model used by the LLM judge for evaluations |
 | `AGENT_MODEL` | `gpt-4o-mini` | Model used by multi-agent team |
 
-OpenAI SDK supports 100+ providers. Use the OpenAI SDK model naming convention (e.g., `claude-3-haiku-20240307`, `gpt-4o`, `gemini/gemini-pro`).
+The platform auto-routes to the correct provider based on model name: `gpt-*` -> OpenAI, `claude-*` -> Anthropic, `gemini-*` -> Google.
 
 ### Agent Configuration
 

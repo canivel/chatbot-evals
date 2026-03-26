@@ -1,4 +1,4 @@
-"""Multi-provider LLM client without litellm.
+"""Multi-provider LLM client using native SDKs.
 
 Supports OpenAI, Anthropic Claude, and Google Gemini via their native SDKs.
 Provider is auto-detected from the model name or can be specified explicitly.
