@@ -7,7 +7,9 @@
       "Bash(pip3 list:*)",
       "Bash(python -m pip list)",
       "Bash(c:/python313/python.exe -m pip list)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(find f:/Projects/chatbot-evals/sdk/chatbot_evals -name *.py -type f)",
+      "Bash(find f:/Projects/chatbot-evals/sdk -name *.py -type f)"
     ]
   }
 }
