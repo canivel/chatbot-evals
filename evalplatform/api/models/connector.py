@@ -22,9 +22,32 @@ if TYPE_CHECKING:
 class ConnectorType(str, enum.Enum):
     """Supported third-party connector integrations."""
 
+    # AI Chatbot Platforms
     MAVEN_AGI = "maven_agi"
     INTERCOM = "intercom"
     ZENDESK = "zendesk"
+    ADA = "ada"
+    SALESFORCE = "salesforce"
+    DIALOGFLOW = "dialogflow"
+    DRIFT = "drift"
+    VOICEFLOW = "voiceflow"
+    COGNIGY = "cognigy"
+    YELLOW_AI = "yellow_ai"
+    RASA = "rasa"
+    BOTPRESS = "botpress"
+    AMAZON_CONNECT = "amazon_connect"
+
+    # Messaging & Support
+    SLACK = "slack"
+    DISCORD = "discord"
+    MICROSOFT_TEAMS = "microsoft_teams"
+    FRESHDESK = "freshdesk"
+    HUBSPOT = "hubspot"
+    LIVECHAT = "livechat"
+    CRISP = "crisp"
+    GORGIAS = "gorgias"
+
+    # Generic
     WEBHOOK = "webhook"
     REST_API = "rest_api"
     FILE_IMPORT = "file_import"

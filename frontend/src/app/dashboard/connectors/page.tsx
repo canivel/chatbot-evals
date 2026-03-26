@@ -16,10 +16,18 @@ import { formatDate, getStatusColor } from "@/lib/utils";
 
 // -- Mock data --
 
+type ConnectorTypeKey =
+  | "maven_agi" | "intercom" | "zendesk" | "ada" | "salesforce"
+  | "dialogflow" | "drift" | "voiceflow" | "cognigy" | "yellow_ai"
+  | "rasa" | "botpress" | "amazon_connect"
+  | "slack" | "discord" | "microsoft_teams" | "freshdesk" | "hubspot"
+  | "livechat" | "crisp" | "gorgias"
+  | "webhook" | "rest_api" | "file_import";
+
 interface Connector {
   id: string;
   name: string;
-  type: "mavenagi" | "intercom" | "zendesk" | "webhook" | "rest" | "file";
+  type: ConnectorTypeKey;
   status: "connected" | "disconnected" | "syncing" | "error";
   last_sync: string | null;
   conversations_synced: number;
@@ -27,69 +35,30 @@ interface Connector {
 }
 
 const connectors: Connector[] = [
-  {
-    id: "conn-001",
-    name: "Production MavenAGI",
-    type: "mavenagi",
-    status: "connected",
-    last_sync: "2026-03-25T08:00:00Z",
-    conversations_synced: 1250,
-    created_at: "2026-01-15T10:00:00Z",
-  },
-  {
-    id: "conn-002",
-    name: "Support Intercom",
-    type: "intercom",
-    status: "connected",
-    last_sync: "2026-03-25T07:30:00Z",
-    conversations_synced: 890,
-    created_at: "2026-02-01T14:00:00Z",
-  },
-  {
-    id: "conn-003",
-    name: "Zendesk Tickets",
-    type: "zendesk",
-    status: "syncing",
-    last_sync: "2026-03-24T22:00:00Z",
-    conversations_synced: 450,
-    created_at: "2026-02-20T09:00:00Z",
-  },
-  {
-    id: "conn-004",
-    name: "Staging Webhook",
-    type: "webhook",
-    status: "connected",
-    last_sync: "2026-03-25T09:15:00Z",
-    conversations_synced: 244,
-    created_at: "2026-03-01T16:00:00Z",
-  },
-  {
-    id: "conn-005",
-    name: "Legacy REST Import",
-    type: "rest",
-    status: "disconnected",
-    last_sync: "2026-03-10T12:00:00Z",
-    conversations_synced: 0,
-    created_at: "2026-01-20T11:00:00Z",
-  },
-  {
-    id: "conn-006",
-    name: "Test Data (CSV)",
-    type: "file",
-    status: "connected",
-    last_sync: "2026-03-20T15:00:00Z",
-    conversations_synced: 100,
-    created_at: "2026-03-20T15:00:00Z",
-  },
+  { id: "conn-001", name: "Production MavenAGI", type: "maven_agi", status: "connected", last_sync: "2026-03-25T08:00:00Z", conversations_synced: 1250, created_at: "2026-01-15T10:00:00Z" },
+  { id: "conn-002", name: "Support - Intercom Fin", type: "intercom", status: "connected", last_sync: "2026-03-25T07:30:00Z", conversations_synced: 890, created_at: "2026-02-01T14:00:00Z" },
+  { id: "conn-003", name: "Ada AI Support", type: "ada", status: "connected", last_sync: "2026-03-25T06:00:00Z", conversations_synced: 2100, created_at: "2026-01-10T10:00:00Z" },
+  { id: "conn-004", name: "Zendesk AI Agent", type: "zendesk", status: "syncing", last_sync: "2026-03-24T22:00:00Z", conversations_synced: 450, created_at: "2026-02-20T09:00:00Z" },
+  { id: "conn-005", name: "Voiceflow Chatbot", type: "voiceflow", status: "connected", last_sync: "2026-03-25T09:00:00Z", conversations_synced: 780, created_at: "2026-02-15T14:00:00Z" },
+  { id: "conn-006", name: "Salesforce Einstein", type: "salesforce", status: "disconnected", last_sync: "2026-03-10T12:00:00Z", conversations_synced: 340, created_at: "2026-01-20T11:00:00Z" },
+  { id: "conn-007", name: "Dialogflow CX Agent", type: "dialogflow", status: "connected", last_sync: "2026-03-25T08:30:00Z", conversations_synced: 1560, created_at: "2026-01-05T10:00:00Z" },
+  { id: "conn-008", name: "Rasa Assistant", type: "rasa", status: "connected", last_sync: "2026-03-25T09:15:00Z", conversations_synced: 620, created_at: "2026-03-01T16:00:00Z" },
+  { id: "conn-009", name: "Test Data (CSV)", type: "file_import", status: "connected", last_sync: "2026-03-20T15:00:00Z", conversations_synced: 100, created_at: "2026-03-20T15:00:00Z" },
 ];
 
-const connectorTypeLabels: Record<Connector["type"], string> = {
-  mavenagi: "MavenAGI",
-  intercom: "Intercom",
-  zendesk: "Zendesk",
-  webhook: "Webhook",
-  rest: "REST API",
-  file: "File Upload",
+const connectorTypeLabels: Record<ConnectorTypeKey, string> = {
+  // AI Chatbot Platforms
+  maven_agi: "MavenAGI", intercom: "Intercom Fin", zendesk: "Zendesk AI",
+  ada: "Ada AI", salesforce: "Salesforce Einstein", dialogflow: "Dialogflow",
+  drift: "Drift AI", voiceflow: "Voiceflow", cognigy: "Cognigy.AI",
+  yellow_ai: "Yellow.ai", rasa: "Rasa", botpress: "Botpress",
+  amazon_connect: "Amazon Connect",
+  // Messaging & Support
+  slack: "Slack", discord: "Discord", microsoft_teams: "MS Teams",
+  freshdesk: "Freshdesk", hubspot: "HubSpot", livechat: "LiveChat",
+  crisp: "Crisp", gorgias: "Gorgias",
+  // Generic
+  webhook: "Webhook", rest_api: "REST API", file_import: "File Import",
 };
 
 export default function ConnectorsPage() {
