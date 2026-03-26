@@ -10,7 +10,7 @@ dependencies = [
     # Agent framework
     "langgraph>=0.4.0",
     "langchain-core>=0.3.0",
-    "litellm>=1.50.0",
+    "openai>=1.60.0",
 
     # Eval libraries
     "deepeval>=2.0.0",

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run:*)",
+      "Bash(uv sync:*)",
+      "Bash(pip list:*)",
+      "Bash(pip3 list:*)",
+      "Bash(python -m pip list)",
+      "Bash(c:/python313/python.exe -m pip list)",
+      "Bash(echo \"exit: $?\")"
+    ]
+  }
+}

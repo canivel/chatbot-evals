@@ -15,7 +15,7 @@ Implement backend features: API endpoints, database models, eval pipeline, conne
 - **Schemas**: Pydantic v2
 - **Auth**: JWT via python-jose, bcrypt passwords
 - **HTTP**: httpx for async requests
-- **LLM**: litellm for multi-provider support
+- **LLM**: openai SDK (configurable base_url for other providers)
 - **Logging**: structlog
 - **Queue**: Celery + Redis
 

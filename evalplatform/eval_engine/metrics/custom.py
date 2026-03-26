@@ -233,7 +233,7 @@ def register_llm_custom_metric(
         name: Unique metric name.
         description: Human-readable description.
         custom_instructions: Evaluation instructions for the LLM judge.
-        model: The litellm model identifier.
+        model: The model identifier (e.g. ``"gpt-4o"``).
         temperature: Sampling temperature.
         version: Metric version string.
         category: Metric category.

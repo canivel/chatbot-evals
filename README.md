@@ -57,7 +57,7 @@ uv run pytest
 
 ## Tech Stack
 
-- **Agent Framework**: LangGraph + LiteLLM
+- **Agent Framework**: LangGraph + OpenAI SDK
 - **Eval Libraries**: DeepEval, RAGAS, custom LLM-as-Judge
 - **Backend**: FastAPI + SQLAlchemy + Celery
 - **Frontend**: Next.js 14 + React + TailwindCSS + shadcn/ui

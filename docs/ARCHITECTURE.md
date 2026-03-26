@@ -194,7 +194,7 @@ class BaseAgent(ABC):
 ```
 
 The base class provides:
-- LLM integration via `call_llm()` using LiteLLM (multi-provider)
+- LLM integration via `call_llm()` using OpenAI SDK (multi-provider)
 - Message bus connectivity via `send_message()` and `broadcast()`
 - Access to shared project state via `self.state`
 - Standard agent lifecycle: `run_turn()` loops through receive -> process -> plan -> execute
@@ -267,7 +267,7 @@ EvalEngine.run_eval(conversations, config)
 - **MetricRegistry** -- Singleton, thread-safe registry using `@metric_registry.register` decorator. Provides lookup by name and category.
 - **EvalEngine** -- Main entry point. Accepts `EvalConfig` (metric names, concurrency, fail mode) and returns `EvalRun` with all results.
 - **BaseMetric** -- Abstract class. All metrics implement `evaluate(EvalContext) -> MetricResult`. Scores normalized to 0.0-1.0.
-- **LLMJudge** -- Sends structured prompts to an LLM via LiteLLM, parses JSON responses into `JudgeVerdict` with score, reasoning, confidence, and metadata. Includes retry logic via tenacity.
+- **LLMJudge** -- Sends structured prompts to an LLM via OpenAI SDK, parses JSON responses into `JudgeVerdict` with score, reasoning, confidence, and metadata. Includes retry logic via tenacity.
 - **PairwiseJudge** -- Compares two responses for the same question, returns winner (A/B/tie) with per-criterion breakdown.
 
 ### Reports Layer
@@ -344,7 +344,7 @@ frontend/
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| Agent Framework | LangGraph + LiteLLM | Agent orchestration and multi-provider LLM access |
+| Agent Framework | LangGraph + OpenAI SDK | Agent orchestration and multi-provider LLM access |
 | Eval Libraries | DeepEval + RAGAS | Baseline eval metric implementations |
 | Backend | FastAPI + Pydantic v2 | REST API with typed schemas |
 | ORM | SQLAlchemy 2.0 + Alembic | Database access and migrations |
@@ -492,7 +492,7 @@ Agents communicate exclusively through the message bus rather than direct method
 Most metrics use an LLM judge (via `LLMJudge`) rather than heuristic scoring. This provides:
 - **Nuanced assessment** -- LLMs can evaluate subjective qualities like coherence and helpfulness.
 - **Structured output** -- Judges return JSON with scores, reasoning, and per-claim breakdowns.
-- **Multi-provider support** -- LiteLLM allows switching between OpenAI, Anthropic, and other providers.
+- **Multi-provider support** -- OpenAI SDK allows switching between OpenAI, Anthropic, and other providers.
 - **Fallback scores** -- Computation-based metrics (latency, cost) handle non-LLM evaluation.
 
 ### 5. Plugin-Based Metric Registry

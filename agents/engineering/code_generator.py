@@ -7,13 +7,14 @@ Supports Python, TypeScript, Dockerfile, and YAML generation.
 from __future__ import annotations
 
 import ast
+import os
 import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
 import structlog
-from litellm import acompletion
+from openai import AsyncOpenAI
 
 from agents.engineering.prompts import CODE_GENERATION_PROMPT, CODE_REVIEW_PROMPT
 
@@ -74,6 +75,10 @@ class CodeGenerator:
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self._client = AsyncOpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY", ""),
+            base_url=os.environ.get("OPENAI_BASE_URL"),
+        )
 
     async def _call_llm(
         self,
@@ -83,7 +88,7 @@ class CodeGenerator:
     ) -> str:
         """Make a raw LLM call and return the response content."""
         try:
-            response = await acompletion(
+            response = await self._client.chat.completions.create(
                 model=self.model,
                 messages=messages,
                 temperature=temperature or self.temperature,

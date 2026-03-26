@@ -1,17 +1,18 @@
 """Base agent class for all agents in the multi-agent development team.
 
-Provides LLM integration via LiteLLM, message bus connectivity,
+Provides LLM integration via the OpenAI SDK, message bus connectivity,
 state access, and a standard agent lifecycle.
 """
 
 from __future__ import annotations
 
 import asyncio
+import os
 from abc import ABC, abstractmethod
 from typing import Any
 
 import structlog
-from litellm import acompletion
+from openai import AsyncOpenAI
 from pydantic import BaseModel, Field
 
 from agents.message_bus import Message, MessageBus, MessageType
@@ -45,7 +46,7 @@ class BaseAgent(ABC):
     """Base class for all agents in the development team.
 
     Provides:
-    - LLM integration via LiteLLM (multi-provider)
+    - LLM integration via OpenAI SDK (configurable base_url for other providers)
     - Message bus connectivity for inter-agent communication
     - Access to shared project state
     - Standard lifecycle (initialize, process, act)
@@ -64,6 +65,12 @@ class BaseAgent(ABC):
         self.context = AgentContext()
         self._running = False
         self._turn_count = 0
+
+        # Initialize OpenAI client
+        self._llm_client = AsyncOpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY", ""),
+            base_url=os.environ.get("OPENAI_BASE_URL"),
+        )
 
         # Register with message bus
         self.bus.register_agent(self.config.agent_id, self.config.team)
@@ -141,7 +148,7 @@ Current project state:
             kwargs["response_format"] = {"type": "json_object"}
 
         try:
-            response = await acompletion(**kwargs)
+            response = await self._llm_client.chat.completions.create(**kwargs)
             content = response.choices[0].message.content
             self.context.conversation_history.append({"role": "assistant", "content": content})
             self.state.log_activity(self.agent_id, "llm_call", {"model": self.config.model})

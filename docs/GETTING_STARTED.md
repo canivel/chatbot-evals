@@ -183,7 +183,7 @@ The API automatically connects to the database and Redis. The `.env` file is loa
 | `EVAL_JUDGE_MODEL` | `gpt-4o` | Model used by the LLM judge for evaluations |
 | `AGENT_MODEL` | `gpt-4o-mini` | Model used by multi-agent team |
 
-LiteLLM supports 100+ providers. Use the LiteLLM model naming convention (e.g., `claude-3-haiku-20240307`, `gpt-4o`, `gemini/gemini-pro`).
+OpenAI SDK supports 100+ providers. Use the OpenAI SDK model naming convention (e.g., `claude-3-haiku-20240307`, `gpt-4o`, `gemini/gemini-pro`).
 
 ### Agent Configuration
 

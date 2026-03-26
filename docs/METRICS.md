@@ -390,7 +390,7 @@ Tracks token usage and estimated cost per conversation. This is a **computation-
 
 Most metrics use the `LLMJudge` class, which:
 
-1. Sends a structured prompt to an LLM via LiteLLM.
+1. Sends a structured prompt to an LLM via OpenAI SDK.
 2. Expects a JSON response with `score`, `reasoning`, `confidence`, and metric-specific fields.
 3. Parses the response into a `JudgeVerdict` model.
 4. Retries on transient failures (TimeoutError, ConnectionError, JSONDecodeError) using tenacity (exponential backoff, up to 3 attempts).

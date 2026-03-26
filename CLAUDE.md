@@ -10,7 +10,7 @@ Multi-agent development framework that builds an open-source SaaS platform for e
 - **Next.js 14 + React + TailwindCSS + shadcn/ui** for frontend
 - **PostgreSQL** + **Redis/Celery** for data and task queue
 - **DeepEval + RAGAS** for eval metrics
-- **LiteLLM** for multi-provider LLM support
+- **OpenAI SDK** for LLM integration (configurable base_url for other providers)
 
 ## Commands
 - `uv sync` - Install dependencies

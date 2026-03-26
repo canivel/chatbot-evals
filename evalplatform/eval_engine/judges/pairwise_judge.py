@@ -45,7 +45,7 @@ class PairwiseJudge:
     ranking responses.
 
     Args:
-        model: The litellm model identifier for the judge LLM.
+        model: The model identifier for the judge LLM (e.g. ``"gpt-4o"``).
         temperature: Sampling temperature.
     """
 

@@ -276,7 +276,7 @@ class AgentConfig(BaseModel):
     name: str              # Display name (e.g., "Backend Engineer")
     role: str              # Role description
     team: str              # Team name (pm, engineering, research, qa, monitor)
-    model: str = "gpt-4o-mini"   # LiteLLM model identifier
+    model: str = "gpt-4o-mini"   # OpenAI SDK model identifier
     temperature: float = 0.7      # LLM sampling temperature
     max_tokens: int = 4096        # Max response tokens
     max_turns: int = 20           # Max turns before agent stops
@@ -375,4 +375,4 @@ response = await self.call_llm(
 )
 ```
 
-Under the hood, this uses LiteLLM's `acompletion()` which supports OpenAI, Anthropic, Google, and 100+ other providers. The model is configurable per-agent via `AgentConfig.model`.
+Under the hood, this uses OpenAI SDK's `acompletion()` which supports OpenAI, Anthropic, Google, and 100+ other providers. The model is configurable per-agent via `AgentConfig.model`.

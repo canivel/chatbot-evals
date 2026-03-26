@@ -1,12 +1,13 @@
-"""LLM-as-Judge implementation with multi-provider support via litellm."""
+"""LLM-as-Judge implementation using the OpenAI SDK."""
 
 from __future__ import annotations
 
 import json
+import os
 import asyncio
 from typing import Any
 
-from litellm import acompletion
+from openai import AsyncOpenAI
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -29,13 +30,13 @@ _RETRYABLE = (
 
 
 class LLMJudge(BaseJudge):
-    """Judge that uses an LLM (via litellm) to evaluate inputs.
+    """Judge that uses an LLM (via OpenAI SDK) to evaluate inputs.
 
-    Supports any model provider that litellm supports.  Responses are expected
-    to be JSON and are parsed into a :class:`JudgeVerdict`.
+    Supports OpenAI and any OpenAI-compatible API via base_url.
+    Responses are expected to be JSON and are parsed into a :class:`JudgeVerdict`.
 
     Args:
-        model: The litellm model identifier (e.g. ``"gpt-4o"``).
+        model: The model identifier (e.g. ``"gpt-4o"``).
         temperature: Sampling temperature for the judge model.
         max_tokens: Maximum tokens in the judge response.
         max_retries: Number of retry attempts on transient failures.
@@ -55,6 +56,10 @@ class LLMJudge(BaseJudge):
         self.max_tokens = max_tokens
         self.max_retries = max_retries
         self.timeout = timeout
+        self._client = AsyncOpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY", ""),
+            base_url=os.environ.get("OPENAI_BASE_URL"),
+        )
 
     # -- Core judge method ---------------------------------------------------
 
@@ -127,7 +132,7 @@ class LLMJudge(BaseJudge):
             prompt_length=len(user_message),
         )
 
-        response = await acompletion(
+        response = await self._client.chat.completions.create(
             model=self.model,
             messages=[
                 {"role": "system", "content": system_message},
